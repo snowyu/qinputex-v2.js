@@ -1,16 +1,16 @@
-import Component from './components/Component'
-import Directive from './directives/Directive'
+import QInputEx from './components/QInputEx/QInputEx.vue'
+import Directive from './directives/Directive.js'
 
 const version = __UI_VERSION__
 
 function install (app) {
-  app.component(Component.name, Component)
+  app.component(QInputEx.name, QInputEx)
   app.directive(Directive.name, Directive)
 }
 
 export {
   version,
-  Component,
+  QInputEx,
   Directive,
   install
 }

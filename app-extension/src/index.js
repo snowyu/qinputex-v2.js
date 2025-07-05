@@ -7,7 +7,33 @@
 
 function extendConf (conf, api) {
   // register our boot file
-  conf.boot.push('~quasar-app-extension-qinputex/src/boot/register.js')
+  conf.boot.push(
+    '~quasar-app-extension-qinputex/src/boot/register.js',
+    '~quasar-app-extension-qinputex/src/boot/i18n.js'
+  )
+
+  // ensure Quasar components and directives are included
+  conf.framework.components = conf.framework.components || []
+  conf.framework.components.push(
+    'QBtn',
+    'QIcon',
+    'QPopupProxy',
+    'QCard',
+    'QCardSection',
+    'QToolbar',
+    'QToolbarTitle',
+    'QInput',
+    'QSelect',
+    'QDate',
+    'QTime',
+    'QColor',
+    'QChip'
+  )
+
+  conf.framework.directives = conf.framework.directives || []
+  conf.framework.directives.push(
+    'ClosePopup'
+  )
 
   if (api.hasWebpack) {
     // make sure app extension files & ui package gets transpiled

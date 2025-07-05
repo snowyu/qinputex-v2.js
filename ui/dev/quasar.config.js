@@ -9,7 +9,8 @@ module.exports = function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     boot: [
-      'register.js'
+      'register.js',
+      'i18n.js'
     ],
 
     css: [
@@ -34,6 +35,26 @@ module.exports = function (ctx) {
       // lang: 'en-US', // Quasar language pack
 
       config: {},
+
+      components: [
+        'QBtn',
+        'QIcon',
+        'QPopupProxy',
+        'QCard',
+        'QCardSection',
+        'QToolbar',
+        'QToolbarTitle',
+        'QInput',
+        'QSelect',
+        'QDate',
+        'QTime',
+        'QColor',
+        'QChip',
+      ],
+
+      directives: [
+        'ClosePopup',
+      ],
 
       // Quasar plugins
       plugins: []
