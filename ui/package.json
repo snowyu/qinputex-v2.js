@@ -4,7 +4,7 @@
   "author": "Riceball LEE <snowyu.lee@gmail.com>",
   "description": "Quasar UI component for an advanced text input with various input types and customizable attachments.",
   "license": "MIT",
-  "module": "dist/index.js",
+  "module": "dist/index.es.js",
   "main": "dist/index.umd.js",
   "scripts": {
     "dev": "cd dev && quasar dev && cd ..",
