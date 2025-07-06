@@ -27,7 +27,11 @@
 
       <q-input-ex v-model="text6" label="Input with Popup" :type="popupType" />
 
-      <q-input-ex v-model="dateValue" label="Date Input" type="date" />
+      <q-input-ex v-model="dateValue" label="Date Input" type="date" >
+        <template #prepend>
+          <q-icon name="event" />
+        </template>
+      </q-input-ex>
 
       <q-input-ex v-model="passwordValue" label="Password Input" type="password" />
     </div>

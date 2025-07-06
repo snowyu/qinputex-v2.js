@@ -1,7 +1,8 @@
 import QInputEx from './components/QInputEx/QInputEx.vue'
 import Directive from './directives/Directive.js'
+import {version} from '../package.json'
 
-const version = __UI_VERSION__
+// const version = __UI_VERSION__
 
 function install (app) {
   app.component(QInputEx.name, QInputEx)

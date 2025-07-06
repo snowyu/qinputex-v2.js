@@ -1,10 +1,10 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
-const path = require('path')
-const webpack = require('webpack')
+import { fileURLToPath } from 'url'
+import { join } from 'path'
 
-module.exports = function (ctx) {
+export default function (ctx) {
   return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
@@ -14,7 +14,8 @@ module.exports = function (ctx) {
     ],
 
     css: [
-      'app.sass'
+      'app.sass',
+      '~quasar-ui-qinputex/dist/index.css'
     ],
 
     extras: [
@@ -66,22 +67,21 @@ module.exports = function (ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'history',
-
-      chainWebpack (chain) {
-        chain.resolve.alias.merge({
-          ui: path.resolve(__dirname, `../src/index.esm.js`)
-        })
-
-        chain.plugin('define-ui')
-          .use(webpack.DefinePlugin, [{
-            __UI_VERSION__: `'${require('../package.json').version}'`
-          }])
-      }
+      alias: {
+        'quasar-ui-qinputex': join(fileURLToPath(import.meta.url), '../../../ui')
+      },
+      
     },
 
     devServer: {
       // port: 8080,
-      open: true // opens browser window automatically
+      open: true, // opens browser window automatically
+      fs: {
+        allow: [
+          join(fileURLToPath(import.meta.url), '../../..'),
+          join(fileURLToPath(import.meta.url), '../../node_modules')
+        ]
+      }
     },
 
     ssr: {

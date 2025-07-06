@@ -4,6 +4,7 @@
   "description": "A Quasar Framework app",
   "productName": "Quasar App",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "quasar dev",
     "dev:ssr": "quasar dev -m ssr",

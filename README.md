@@ -1,7 +1,7 @@
 <img src="https://img.shields.io/npm/v/quasar-ui-qinputex.svg?label=quasar-ui-qinputex">
 <img src="https://img.shields.io/npm/v/quasar-app-extension-qinputex.svg?label=quasar-app-extension-qinputex">
 
-Compatible with Quasar UI v2 and Vue 3.
+The Quasar QInputEx Component which compatible with Quasar UI v2 and Vue 3.
 
 # Quasar QInputEx Component
 

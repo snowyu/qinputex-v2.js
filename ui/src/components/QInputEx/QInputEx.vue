@@ -1,3 +1,5 @@
+
+
 <template>
   <div v-if="hasTopOrBottomSlots" class="q-field-ex">
     <div v-if="slots.top || attaches.top" class="row q-field-top">
@@ -283,8 +285,3 @@ onMounted(() => {
 
 </script>
 
-<style lang="sass">
-.q-field-ex
-  // No specific styling needed here for .q-field-before, .q-field-after
-  // as they are now handled by QInput's internal slots.
-</style>
