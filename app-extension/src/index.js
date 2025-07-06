@@ -9,7 +9,7 @@ function extendConf (conf, api) {
   // register our boot file
   conf.boot.push(
     '~quasar-app-extension-qinputex/src/boot/register.js',
-    '~quasar-app-extension-qinputex/src/boot/i18n.js'
+    '~quasar-app-extension-qinputex/src/boot/i18n.js',
   )
 
   // ensure Quasar components and directives are included
@@ -27,12 +27,12 @@ function extendConf (conf, api) {
     'QDate',
     'QTime',
     'QColor',
-    'QChip'
+    'QChip',
   )
 
   conf.framework.directives = conf.framework.directives || []
   conf.framework.directives.push(
-    'ClosePopup'
+    'ClosePopup',
   )
 
   if (api.hasVite) {
@@ -42,7 +42,7 @@ function extendConf (conf, api) {
       || conf.build.transpileDependencies // q/app-vite v1
     )
     transpileTarget.push(/quasar-app-extension-qinputex[\/]src/)
-  
+  }
 
   // make sure the stylesheet goes through webpack to avoid SSR issues
   conf.css.push('~quasar-ui-qinputex/dist/index.css')
