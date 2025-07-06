@@ -45,6 +45,7 @@
     "last 4 iOS versions"
   ],
   "dependencies": {
+    "date-fns": "^4.1.0",
     "lodash.merge": "^4.6.2"
   }
 }

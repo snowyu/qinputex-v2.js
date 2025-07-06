@@ -34,6 +34,16 @@
       </q-input-ex>
 
       <q-input-ex v-model="passwordValue" label="Password Input" type="password" />
+
+      <q-input-ex v-model="timeValue" label="Time Input" type="time" />
+
+      <q-input-ex v-model="datetimeValue" label="Datetime Input" type="datetime" />
+
+      <q-input-ex v-model="fulltimeValue" label="Full Time Input" type="fulltime" />
+
+      <q-input-ex v-model="colorValue" label="Color Input" type="color" />
+
+      <q-input-ex v-model="searchValue" label="Search Input" type="search" @search="onSearch" :history="searchHistory" />
     </div>
   </q-page>
 </template>
@@ -50,6 +60,19 @@ const text5 = ref('Input with buttons');
 const text6 = ref('Popup Value');
 const dateValue = ref('2023/07/05');
 const passwordValue = ref('mysecretpassword');
+const timeValue = ref('10:30');
+const datetimeValue = ref('2023-07-05 10:30:00');
+const fulltimeValue = ref('10:30:00');
+const colorValue = ref('#ff0000');
+const searchValue = ref('');
+const searchHistory = ref(['apple', 'banana', 'orange']);
+
+function onSearch(value) {
+  console.log('Search event:', value);
+  if (searchHistory.value.indexOf(value) === -1) {
+    searchHistory.value.unshift(value);
+  }
+}
 
 const popupType = markRaw({
   name: 'test-popup',

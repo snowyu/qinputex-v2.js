@@ -10,7 +10,7 @@ function getCurrentYM() {
   return result;
 }
 
-export default {
+export const DATE_INPUT_TYPE = {
   name: 'date',
   type: 'text',
   mask: 'date',
@@ -24,10 +24,16 @@ export default {
         attrs: {
           'default-year-month': getCurrentYM()
         },
+        toValue: (iValue) => {
+          // This function transforms the QInputEx's internal iValue before passing it to QDate.
+          // For example, if iValue was a full datetime string, and QDate only needs the date part.
+          // In this case, QDate can usually handle the string format directly, so we just pass it through.
+          return iValue;
+        },
         on: {
-          input(value, reason, detail, { iValue, nativeType, attaches, popupRef }) {
+          'update:modelValue': function(value, reason, detail, { iValue, nativeType, attaches, popupRef, hidePopup }) {
             // close the popup.
-            if (['day', 'today'].indexOf(reason) !== -1) popupRef.value.hide();
+            if (['day', 'today'].indexOf(reason) !== -1) hidePopup();
             // if you wanna change the value here:
             return value;
           }
@@ -36,4 +42,5 @@ export default {
 
     }
   }
-}
+};
+export default DATE_INPUT_TYPE;

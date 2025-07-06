@@ -55,6 +55,26 @@ Ensure your `quasar.conf.js` (or `quasar.config.js` for Quasar v2) has the neces
   * `string`: the exists(registered) input type name.
   * `InputType`: customize input type or override exists InputType.
     * `name` *string* : it will override the exists InputType if the name is exists
+    * `toDisplayValue` *(value: any) => any* (Optional): A function to transform the `modelValue` (external, raw format) into the `iValue` (internal, display format) for the input component.
+    * `fromDisplayValue` *(value: any) => any* (Optional): A function to transform the `iValue` (internal, display format) back into the `modelValue` (external, raw format) before emitting `update:modelValue`.
+
+### Data Conversion (`toDisplayValue`, `fromDisplayValue`)
+
+`QInputEx` acts as a proxy for various input types. To handle different data formats between your application's data model and the input component's display, `QInputEx` provides `toDisplayValue` and `fromDisplayValue` functions within the `InputType` definition.
+
+*   **`toDisplayValue`**: This function is called when the `modelValue` (the value from the parent component, in its raw/original format) changes. It converts this raw value into a format suitable for display and editing within the `QInputEx` component's internal `iValue`.
+    *   **Example**: Converting a `Date` object (`modelValue`) into a `YYYY-MM-DD` string (`iValue`) for a date input.
+
+*   **`fromDisplayValue`**: This function is called when the `iValue` (the internal value, typically what's displayed in the input field) changes. It converts this display-formatted value back into the raw/original format expected by the parent component, which is then emitted via `update:modelValue`.
+    *   **Example**: Converting a `YYYY-MM-DD` string (`iValue`) back into a `Date` object (`modelValue`) for a date input.
+
+### Popup Value Transformation (`popup.toValue`)
+
+When an `InputType` includes a `popup` (e.g., for `QDate`, `QTime`, `QColor`), the `popup` object can also define a `toValue` function.
+
+*   **`popup.toValue`**: This function is used to transform the `QInputEx`'s internal `iValue` into a format specifically required by the popup component (e.g., `QDate`'s `modelValue` prop). This allows for fine-grained control over the data passed to the popup, even if `iValue` itself is already in a display format.
+    *   **Example**: If `iValue` is a full datetime string, but the `QDate` popup only needs the date part, `popup.toValue` can extract and return just the date.
+
 
 ### Supported Input Types
 
@@ -118,6 +138,18 @@ export const DateInput = {
   type: 'text',
   mask: 'date',
   rules: ['date'],
+  toDisplayValue: (dateObj) => {
+    if (dateObj instanceof Date) {
+      return dateObj.toISOString().split('T')[0]; // Date object to YYYY-MM-DD string
+    }
+    return '';
+  },
+  fromDisplayValue: (dateString) => {
+    if (typeof dateString === 'string' && dateString) {
+      return new Date(dateString); // YYYY-MM-DD string to Date object
+    }
+    return null;
+  },
   attaches: {
     'append': {
       icon: 'event',
@@ -126,6 +158,11 @@ export const DateInput = {
         name: 'QDate',
         attrs: {
           'default-year-month': getCurrentYM()
+        },
+        toValue: (iValue) => {
+          // QInputEx's iValue is already a YYYY-MM-DD string.
+          // QDate can directly use this string as its modelValue.
+          return iValue;
         },
         on: {
           input(value, reason, detail, { iValue, nativeType, attaches, popupRef }) {

@@ -1,4 +1,4 @@
-export default {
+export const PASSWORD_INPUT_TYPE = {
   name: 'password',
   type: 'password',
   attaches: {
@@ -14,4 +14,5 @@ export default {
       }
     }
   }
-}
+};
+export default PASSWORD_INPUT_TYPE;

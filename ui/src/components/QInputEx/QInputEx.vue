@@ -50,7 +50,8 @@ const nativeType = ref('text');
 const mask = ref('');
 const rules = ref(null);
 const inValue = ref(null);
-const outValue = ref(null);
+const fromDisplayValue = ref(null);
+const toDisplayValue = ref(null);
 const componentProps = ref({});
 
 let mReason = null;
@@ -58,23 +59,20 @@ let mDetail = null;
 
 const GRegisteredTypes = getRegisteredTypes();
 
-// function bindObj(obj, that) {
-//   if (obj) {
-//     Object.keys(obj).forEach(k => {
-//       if (typeof obj[k] === 'function') {
-//         obj[k] = obj[k].bind(that);
-//       }
-//     });
-//   }
-//   return obj;
-// }
+
 
 watch(() => props.modelValue, (newValue) => {
-  iValue.value = newValue;
+  if (toDisplayValue.value) { newValue = toDisplayValue.value(newValue); }
+  if (String(iValue.value) !== String(newValue)) {
+    iValue.value = newValue;
+  }
 });
 
 watch(iValue, (newValue) => {
-  emit('update:modelValue', newValue, mReason, mDetail);
+  if (fromDisplayValue.value) { newValue = fromDisplayValue.value(newValue); }
+  if (String(newValue) !== String(props.modelValue)) {
+    emit('update:modelValue', newValue, mReason, mDetail);
+  }
 });
 
 function clearType() {
@@ -97,13 +95,11 @@ function cloneType(aType) {
   iType.value = aType;
   mask.value = attrs.mask || aType.mask;
   rules.value = attrs.rules || aType.rules;
-  inValue.value = aType.inValue;
-  outValue.value = aType.outValue;
+  toDisplayValue.value = aType.toDisplayValue;
+  fromDisplayValue.value = aType.fromDisplayValue;
   nativeType.value = aType.type;
   componentProps.value = aType.props;
-  // if (componentProps.value) {
-  //   bindObj(componentProps.value, this);
-  // }
+
   const vAttaches = {};
   if (aType.attaches) {
     Object.keys(aType.attaches).forEach((attachName) => {
@@ -172,10 +168,8 @@ function getPopupComponent(popup) {
   return typeof comp === 'string' ? resolveComponent(comp) : comp;
 }
 
-function getPopup(aName) {
-  // This needs to be handled differently in Vue 3, likely with template refs
-  // This is a placeholder for now
-  return null;
+function getPopup() {
+  return popupRef.value;
 }
 
 function genAttach(name) {
@@ -204,8 +198,15 @@ function getAttach(attach) {
     const props = { ...attach.props, ...vCompAttrs };
     const on = {};
     if (attach.on) {
-      Object.assign(on, attach.on);
-      // bindObj(on, this); // 'this' is not available in setup context for binding
+      Object.keys(attach.on).forEach(eventName => {
+        const parts = eventName.split(':');
+        let onEventName = 'on' + parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+        if (parts.length > 1) {
+          onEventName += ':' + parts[1];
+        }
+        onEventName = onEventName.replace(/-(\w)/g, (match, p1) => p1.toUpperCase());
+        on[onEventName] = attach.on[eventName];
+      });
     }
     return h(attach.name, { ...props, ...on });
   } else if (attach.icon || attach.caption) {
@@ -235,12 +236,27 @@ function getPopupVNode(attach) {
   const compName = getPopupComponent(vPopup);
   const caption = vPopup.caption || iType.value.name;
 
-  const compOn = { ...vPopup.on };
-  const onInput = compOn.input || vPopup['@input'];
-  delete compOn.input;
-  // bindObj(compOn, this); // 'this' is not available in setup context for binding
+  const compOn = {};
+  // Merge events from vPopup.on, ensuring correct camelCase for Vue 3
+  if (vPopup.on) {
+    Object.keys(vPopup.on).forEach(eventName => {
+      const parts = eventName.split(':');
+      let onEventName = 'on' + parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+      if (parts.length > 1) {
+        onEventName += ':' + parts[1];
+      }
+      onEventName = onEventName.replace(/-(\w)/g, (match, p1) => p1.toUpperCase());
 
-  compOn['onUpdate:modelValue'] = (value, reason, detail) => {
+      compOn[onEventName] = vPopup.on[eventName];
+    });
+  }
+
+  // Override or add the primary onUpdate:modelValue handler
+  const originalOnUpdateModelValue = compOn['onUpdate:modelValue'];
+
+  compOn['onUpdate:modelValue'] = function (value, reason, detail) {
+  console.log('🚀 ~ file: QInputEx.vue:258 ~ onUpdate:modelValue:', arguments)
+
     if (typeof reason === 'object') {
       detail = reason;
       reason = '';
@@ -248,9 +264,19 @@ function getPopupVNode(attach) {
     reason = reason || vPopup.ref || iType.value.name;
     mReason = reason;
     mDetail = detail;
-    if (typeof onInput === 'function') {
-      const v = onInput(value, reason, detail, { iValue, nativeType, attaches, popupRef }); // Pass relevant reactive variables
-      if (v !== undefined) { value = v; }
+
+    // Call the original handler from datetime.js if it exists
+    if (typeof originalOnUpdateModelValue === 'function') {
+      console.log('QInputEx - Calling originalOnUpdateModelValue from datetime.js');
+      const val = originalOnUpdateModelValue.call(null, value, reason, detail, {
+        iValue,
+        nativeType,
+        attaches,
+        popupRef,
+        attrs: attrs,
+        hidePopup: () => popupRef.value.hide()
+      });
+      if (val !== undefined) {value = val}
     }
     iValue.value = value;
   };
