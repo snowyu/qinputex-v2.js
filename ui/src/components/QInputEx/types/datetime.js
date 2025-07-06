@@ -85,13 +85,13 @@ export const DATETIME_INPUT_TYPE = {
           attrs: {
             mask: 'YYYY-MM-DD HH:mm:ss',
           },
-          on: {
-            'update:modelValue': function(value, reason, detail, { iValue, attrs, hidePopup }) {
-              if (attrs.smartClosed !== false) {
-                hidePopup();
-              }
-            },
-          },
+          // on: {
+          //   'update:modelValue': function(value, reason, detail, { iValue, attrs, hidePopup }) {
+          //     if (attrs.smartClosed !== false) {
+          //       hidePopup();
+          //     }
+          //   },
+          // },
         },
       },
     ],
