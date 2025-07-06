@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { defineOptions, ref, computed, watch, onMounted, useAttrs, useSlots, h, nextTick, resolveComponent, markRaw } from 'vue';
+import { ref, computed, watch, onMounted, useAttrs, useSlots, h, nextTick, resolveComponent, markRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { QInput, QSelect, QBtn, QPopupProxy, QCard, QToolbar, QToolbarTitle, QCardSection } from 'quasar';
 import merge from 'lodash.merge';
