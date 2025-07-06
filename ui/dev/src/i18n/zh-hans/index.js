@@ -99,5 +99,10 @@ export default {
   "Username or password incorrect": "用户名或密码不对",
   "required": "必填",
 	"Remember me": "记住我",
-	"Version": "版本"
+	"Version": "版本",
+  "text": "文本",
+  "textarea": "文本域",
+  "number": "数字",
+  "date": "日期",
+  "password": "密码"
 }

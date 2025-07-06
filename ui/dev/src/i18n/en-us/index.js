@@ -75,5 +75,10 @@ export default {
   "Username or password incorrect.": "Username or password incorrect.",
   "required": "required",
   "Remember me": "Remember me",
-  "Version": "Version"
+  "Version": "Version",
+  "text": "Text",
+  "textarea": "Text Area",
+  "number": "Number",
+  "date": "Date",
+  "password": "Password"
 }

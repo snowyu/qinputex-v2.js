@@ -55,5 +55,10 @@ export default {
   "Username or password incorrect.": "Identifiant ou mot de passe incorrect.",
   "Remember me": "Rester connecté",
   "required": "requis",
-  "Version": "Version"
+  "Version": "Version",
+  "text": "Texte",
+  "textarea": "Zone de texte",
+  "number": "Nombre",
+  "date": "Date",
+  "password": "Mot de passe"
 }

@@ -263,7 +263,7 @@ function getPopupVNode(attach) {
     h(QCard, null, () => [
       h(QToolbar, null, () => [
         h(QBtn, { flat: true, round: true, icon: attach.icon }),
-        h(QToolbarTitle, null, () => t('Please select', {type: caption})),
+        h(QToolbarTitle, null, () => t('Please select', {type: t(caption)})),
         h(QBtn, { flat: true, round: true, color: 'secondary', icon: 'close', onClick: () => popupRef.value.hide() })
       ]),
       h(QCardSection, null, () => comp)
