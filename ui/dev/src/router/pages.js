@@ -17,7 +17,6 @@ function slugify (str) {
 }
 
 const pages = [
-  { file: 'Test1', title: 'Test1.vue', path: slugify(kebabCase('Test1')) },
   { file: 'TestQInputEx', title: 'TestQInputEx.vue', path: slugify(kebabCase('TestQInputEx')) }
 ]
 
