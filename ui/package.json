@@ -2,7 +2,7 @@
   "name": "quasar-ui-qinputex",
   "version": "0.0.1",
   "author": "Riceball LEE <snowyu.lee@gmail.com>",
-  "description": "My awesome component",
+  "description": "Quasar UI component for an advanced text input with various input types and customizable attachments.",
   "license": "MIT",
   "module": "dist/index.esm.js",
   "main": "dist/index.common.js",

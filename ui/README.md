@@ -28,11 +28,12 @@ Install the [App Extension](../app-extension).
 Create and register a boot file:
 
 ```js
-import Vue from 'vue'
+import { createApp } from 'vue'
 import Plugin from 'quasar-ui-qinputex'
 import 'quasar-ui-qinputex/dist/index.css'
 
-Vue.use(Plugin)
+const app = createApp({})
+app.use(Plugin)
 ```
 
 **OR**:
@@ -41,7 +42,7 @@ Vue.use(Plugin)
 <style src="quasar-ui-qinputex/dist/index.css"></style>
 
 <script>
-import { Component as QInputEx, Directive } from 'quasar-ui-qinputex'
+import { QInputEx, Directive } from 'quasar-ui-qinputex'
 
 export default {
   
@@ -61,11 +62,12 @@ export default {
 ## Vue CLI project
 
 ```js
-import Vue from 'vue'
+import { createApp } from 'vue'
 import Plugin from 'quasar-ui-qinputex'
 import 'quasar-ui-qinputex/dist/index.css'
 
-Vue.use(Plugin)
+const app = createApp({})
+app.use(Plugin)
 ```
 
 **OR**:
@@ -74,7 +76,7 @@ Vue.use(Plugin)
 <style src="quasar-ui-qinputex/dist/index.css"></style>
 
 <script>
-import { Component as QInputEx, Directive } from 'quasar-ui-qinputex'
+import { QInputEx, Directive } from 'quasar-ui-qinputex'
 
 export default {
   
