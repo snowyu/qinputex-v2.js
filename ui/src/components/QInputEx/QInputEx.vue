@@ -49,7 +49,6 @@ const attaches = ref({});
 const nativeType = ref('text');
 const mask = ref('');
 const rules = ref(null);
-const inValue = ref(null);
 const fromDisplayValue = ref(null);
 const toDisplayValue = ref(null);
 const componentProps = ref({});
