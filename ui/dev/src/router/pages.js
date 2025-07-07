@@ -17,7 +17,8 @@ function slugify (str) {
 }
 
 const pages = [
-  { file: 'TestQInputEx', title: 'TestQInputEx.vue', path: slugify(kebabCase('TestQInputEx')) }
+  { file: 'TestQInputEx', title: 'TestQInputEx.vue', path: slugify(kebabCase('TestQInputEx')) },
+  { file: 'TestDynamicInputEx', title: 'TestDynamicInputEx.vue', path: slugify(kebabCase('TestDynamicInputEx')) }
 ]
 
 export default pages
