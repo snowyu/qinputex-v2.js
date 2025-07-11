@@ -15,7 +15,7 @@ export default function (ctx) {
 
     css: [
       'app.sass',
-      '~quasar-ui-qinputex/dist/index.css'
+      // '~quasar-ui-qinputex/dist/index.css'
     ],
 
     extras: [
@@ -70,7 +70,7 @@ export default function (ctx) {
       alias: {
         'quasar-ui-qinputex': join(fileURLToPath(import.meta.url), '../../../ui')
       },
-      
+
     },
 
     devServer: {

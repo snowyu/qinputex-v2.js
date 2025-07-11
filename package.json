@@ -1,0 +1,13 @@
+{
+  "name": "qinputex-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "ui",
+    "ui/dev",
+    "app-extension"
+  ],
+  "scripts": {
+    "postinstall": "node ./ui/sync-app-ext.js"
+  }
+}

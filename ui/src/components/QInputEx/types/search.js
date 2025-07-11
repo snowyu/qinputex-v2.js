@@ -1,5 +1,6 @@
 import { TEXT_INPUT_TYPE } from './text';
-import QInputHistory from '../../QInputHistory/QInputHistory.vue';
+import QInputHistory from '../QInputHistory.vue';
+// console.log('🚀 ~ file: search.js:3 ~ QInputHistory:', QInputHistory)
 
 /**
  * search input type
@@ -28,11 +29,12 @@ export const SEARCH_INPUT_TYPE = {
     bottom: {
       name: QInputHistory,
       on: {
-        click(text, index, { iValue, inputBox }) {
+        click(text, index, { iValue, inputBox, emit }) {
           if (text !== iValue.value) {
             iValue.value = text;
           }
           inputBox.value.focus();
+          emit('search', iValue.value);
         },
       },
     },

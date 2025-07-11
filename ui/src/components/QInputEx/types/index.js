@@ -8,6 +8,7 @@ import DateTime from './datetime';
 import FullTime from './fulltime';
 import Color from './color';
 import Search from './search';
+import Select from './select';
 
 export default {
   Text,
@@ -19,5 +20,6 @@ export default {
   DateTime,
   FullTime,
   Color,
-  Search
+  Search,
+  Select
 };

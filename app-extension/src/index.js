@@ -45,7 +45,7 @@ function extendConf (conf, api) {
   }
 
   // make sure the stylesheet goes through webpack to avoid SSR issues
-  conf.css.push('~quasar-ui-qinputex/dist/index.css')
+  // conf.css.push('~quasar-ui-qinputex/dist/index.css')
 }
 
 export default function (api) {

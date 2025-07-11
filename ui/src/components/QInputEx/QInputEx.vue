@@ -3,7 +3,11 @@
 <template>
   <div v-if="hasTopOrBottomSlots" class="q-field-ex">
     <div v-if="slots.top || attaches.top" class="row q-field-top">
-      <component :is="genAttach('top')" />
+      <component
+        v-for="(item, index) in genAttach('top')"
+        :key="index"
+        :is="item"
+      />
     </div>
     <component :is="componentName" ref="inputBox" v-bind="inputProps" v-model="iValue">
       <template v-for="(slot, name) in internalQInputSlots" #[name]>
@@ -11,7 +15,11 @@
       </template>
     </component>
     <div v-if="slots.bottom || attaches.bottom" class="row q-field-bottom">
-      <component :is="genAttach('bottom')" />
+      <component
+        v-for="(item, index) in genAttach('bottom')"
+        :key="index"
+        :is="item"
+      />
     </div>
   </div>
   <component v-else :is="componentName" ref="inputBox" v-bind="inputProps" v-model="iValue">
@@ -22,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, useAttrs, useSlots, h, nextTick, resolveComponent, markRaw } from 'vue';
+import { ref, computed, watch, onMounted, useAttrs, useSlots, h, nextTick, resolveComponent, shallowRef, Fragment } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { QInput, QSelect, QBtn, QPopupProxy, QCard, QToolbar, QToolbarTitle, QCardSection } from 'quasar';
 import merge from 'lodash.merge';
@@ -45,20 +53,19 @@ const slots = useSlots();
 const inputBox = ref(null);
 const iValue = ref(props.modelValue);
 const iType = ref(null);
-const attaches = ref({});
+const attaches = shallowRef({});
 const nativeType = ref('text');
 const mask = ref('');
 const rules = ref(null);
-const fromDisplayValue = ref(null);
-const toDisplayValue = ref(null);
+const fromDisplayValue = shallowRef(null);
+const toDisplayValue = shallowRef(null);
 const componentProps = ref({});
+const popupRef = ref(null);
 
 let mReason = null;
 let mDetail = null;
 
 const GRegisteredTypes = getRegisteredTypes();
-
-
 
 watch(() => props.modelValue, (newValue) => {
   if (toDisplayValue.value) { newValue = toDisplayValue.value(newValue); }
@@ -90,7 +97,7 @@ function resetValidation() {
   }
 }
 
-function cloneType(aType) {
+function assignFromType(aType) {
   iType.value = aType;
   mask.value = attrs.mask || aType.mask;
   rules.value = attrs.rules || aType.rules;
@@ -106,16 +113,10 @@ function cloneType(aType) {
       if (Array.isArray(src[attachName])) {
         vAttaches[attachName] = src[attachName].map((item) => {
           const newItem = { ...item };
-          if (newItem.popup && newItem.popup.name) {
-            newItem.popup.name = markRaw(newItem.popup.name);
-          }
           return newItem;
         });
       } else {
         const newItem = { ...src[attachName] };
-        if (newItem.popup && newItem.popup.name) {
-          newItem.popup.name = markRaw(newItem.popup.name);
-        }
         vAttaches[attachName] = newItem;
       }
     });
@@ -129,7 +130,7 @@ watch(() => props.type, (newType) => {
     newType && newType.name ? merge({}, GRegisteredTypes[newType.name], newType) : newType;
   if (!vInputType) { throw new Error(`The input '${newType}' type is not exists`); }
   clearType();
-  cloneType(vInputType);
+  assignFromType(vInputType);
 }, { immediate: true });
 
 const componentName = computed(() => (nativeType.value === 'select' ? QSelect : QInput));
@@ -185,6 +186,8 @@ function genAttach(name) {
       });
     }
     if (vSlot && vSlotAfterAttach) { result.push(vSlot()); }
+
+    // NOTE: VUE3 can not use VNode[] in `<component :is="...">` directly, see template for more details
     return result;
   }
   return null;
@@ -207,14 +210,16 @@ function getAttach(attach) {
         on[onEventName] = attach.on[eventName];
       });
     }
-    return h(attach.name, { ...props, ...on });
+    const vComp = attach.name // resolveComponent(attach.name)
+    const vNode = h(vComp, { ...props, ...on });
+    return vNode;
   } else if (attach.icon || attach.caption) {
     const btnProps = { flat: true, dense: true, ...attach.attrs };
     if (attach.icon) btnProps.icon = attach.icon;
     if (attach.caption) btnProps.label = attach.caption;
 
     const btnOn = {};
-    if (attach.click) btnOn.onClick = (e) => attach.click(e, { iValue, nativeType, attaches }); // 'this' is not available in setup context for binding
+    if (attach.click) btnOn.onClick = (e) => attach.click(e, { iValue, nativeType, attaches, emit }); // 'this' is not available in setup context for binding
 
     if (attach.popup) {
       return h(QBtn, { ...btnProps, ...btnOn }, () => [getPopupVNode(attach)]);
@@ -254,7 +259,6 @@ function getPopupVNode(attach) {
   const originalOnUpdateModelValue = compOn['onUpdate:modelValue'];
 
   compOn['onUpdate:modelValue'] = function (value, reason, detail) {
-  console.log('🚀 ~ file: QInputEx.vue:258 ~ onUpdate:modelValue:', arguments)
 
     if (typeof reason === 'object') {
       detail = reason;
@@ -273,7 +277,8 @@ function getPopupVNode(attach) {
         attaches,
         popupRef,
         attrs: attrs,
-        hidePopup: () => popupRef.value.hide()
+        hidePopup: () => popupRef.value.hide(),
+        emit
       });
       if (val !== undefined) {value = val}
     }
@@ -281,8 +286,6 @@ function getPopupVNode(attach) {
   };
 
   const comp = h(compName, { ...compAttrs, ...compOn });
-
-  const popupRef = ref(null);
 
   return h(QPopupProxy, { ...popupProps, ref: popupRef }, () =>
     h(QCard, null, () => [
@@ -296,7 +299,6 @@ function getPopupVNode(attach) {
   );
 }
 
-
 // Expose public methods
 defineExpose({
   focus: () => inputBox.value?.focus(),
@@ -309,4 +311,3 @@ onMounted(() => {
 });
 
 </script>
-
