@@ -134,14 +134,14 @@ describe('QInputEx', () => {
     expect(popupRef.hide).to.be.a('function');
   });
 
-  test.only('should handle "search" type correctly', async () => {
+  test('should handle "search" type correctly', async () => {
     const onSearch = vi.fn();
-    const wrapper = mount(QInputExComponent, { 
-      props: { 
-        type: 'search', 
+    const wrapper = mount(QInputExComponent, {
+      props: {
+        type: 'search',
         modelValue: 'test search',
-        onSearch
-      } 
+        onSearch,
+      }
     });
     const qInput = wrapper.findComponent(QInput);
     const qInputHistory = wrapper.findComponent(QInputHistory);
